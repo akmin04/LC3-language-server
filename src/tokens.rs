@@ -1,5 +1,29 @@
 #[derive(Debug)]
-pub enum Token {
+pub struct Token {
+    pub value: TokenValue,
+    pub start_loc: FileLoc,
+    pub end_loc: FileLoc,
+}
+
+#[derive(Clone, Copy, Debug)]
+pub struct FileLoc {
+    pub line: u32,
+    pub col: u32,
+}
+
+impl FileLoc {
+    pub fn new() -> Self {
+        FileLoc { line: 1, col: 1 }
+    }
+
+    pub fn next_line(&mut self) {
+        self.line += 1;
+        self.col = 1;
+    }
+}
+
+#[derive(Debug)]
+pub enum TokenValue {
     NewLine,
     Comma,
     Comment(String),
@@ -23,7 +47,6 @@ pub enum NumberLiteralFormat {
     Hex,
     Decimal,
 }
-
 
 #[derive(Debug)]
 pub enum Directive {
