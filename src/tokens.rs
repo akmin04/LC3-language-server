@@ -1,4 +1,4 @@
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct Token {
     pub value: TokenValue,
     pub start_loc: FileLoc,
@@ -22,34 +22,34 @@ impl FileLoc {
     }
 }
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub enum TokenValue {
     NewLine,
     Comma,
     Comment(String),
-    NumberLiteral(NumberLiteral),
+    NumberLiteral(NumberLiteralTokenValue),
     StringLiteral(String),
-    Directive(Directive),
-    Opcode(Opcode),
-    TrapRoutine(TrapRoutine),
-    Register(u8),
+    Directive(DirectiveTokenValue),
+    Opcode(OpcodeTokenValue),
+    TrapRoutine(TrapRoutineTokenValue),
+    Register(RegisterTokenValue),
     Label(String), // 1-20 characters, starting with letter, allows underscores?
 }
 
-#[derive(Debug)]
-pub struct NumberLiteral {
+#[derive(Clone, Debug)]
+pub struct NumberLiteralTokenValue {
     pub format: NumberLiteralFormat,
     pub value: String,
 }
 
-#[derive(Debug)]
+#[derive(Clone, Copy, Debug)]
 pub enum NumberLiteralFormat {
     Hex,
     Decimal,
 }
 
-#[derive(Debug)]
-pub enum Directive {
+#[derive(Clone, Debug)]
+pub enum DirectiveTokenValue {
     ORIG,
     FILL,
     BLKW,
@@ -58,8 +58,8 @@ pub enum Directive {
     Error(String),
 }
 
-#[derive(Debug)]
-pub enum Opcode {
+#[derive(Clone, Copy, Debug)]
+pub enum OpcodeTokenValue {
     ADD,
     AND,
     BR { n: bool, z: bool, p: bool },
@@ -79,8 +79,8 @@ pub enum Opcode {
     TRAP,
 }
 
-#[derive(Debug)]
-pub enum TrapRoutine {
+#[derive(Clone, Copy, Debug)]
+pub enum TrapRoutineTokenValue {
     GETC,
     OUT,
     PUTS,
@@ -89,93 +89,14 @@ pub enum TrapRoutine {
     HALT,
 }
 
-// pub enum Opcode {
-//     ADD(AddOpcode),
-//     AND(AndOpcode),
-//     BR {
-//         n: bool,
-//         z: bool,
-//         p: bool,
-//         pc_offset9: LiteralOrLabel<9>,
-//     },
-//     JMP {
-//         base_r: Register,
-//     },
-//     JSR {
-//         pc_offset11: LiteralOrLabel<11>,
-//     },
-//     // JSRR,
-//     LD {
-//         dr: Register,
-//         pc_offset9: LiteralOrLabel<9>,
-//     },
-//     LDI {
-//         dr: Register,
-//         pc_offset9: LiteralOrLabel<9>,
-//     },
-//     LDR {
-//         dr: Register,
-//         base_r: Register,
-//         offset6: LiteralOrLabel<6>,
-//     },
-//     LEA {
-//         dr: Register,
-//         pc_offset9: LiteralOrLabel<9>,
-//     },
-//     NOT {
-//         dr: Register,
-//         sr: Register,
-//     },
-//     RET,
-//     // RTI,
-//     ST {
-//         sr: Register,
-//         pc_offset9: LiteralOrLabel<9>,
-//     },
-//     STI {
-//         sr: Register,
-//         pc_offset9: LiteralOrLabel<9>,
-//     },
-//     STR {
-//         sr: Register,
-//         base_r: Register,
-//         offset6: LiteralOrLabel<6>,
-//     },
-//     TRAP {
-//         trapvect8: Literal<8, false>,
-//     },
-// }
-
-// pub enum AddOpcode {
-//     SR2 {
-//         dr: Register,
-//         sr1: Register,
-//         sr2: Register,
-//     },
-//     IMM {
-//         dr: Register,
-//         sr2: Register,
-//         imm5: Literal<5, false>,
-//     },
-// }
-
-// pub enum AndOpcode {
-//     SR2 {
-//         dr: Register,
-//         sr1: Register,
-//         sr2: Register,
-//     },
-//     IMM {
-//         dr: Register,
-//         sr2: Register,
-//         imm5: Literal<5, true>,
-//     },
-// }
-
-// pub enum Directive {
-//     ORIG { location: Literal<16, true> },
-//     FILL { value: Literal<16, true> },
-//     BLKW { size: Literal<16, true> },
-//     STRINGZ { text: String },
-//     END,
-// }
+#[derive(Clone, Copy, Debug)]
+pub enum RegisterTokenValue {
+    R0,
+    R1,
+    R2,
+    R3,
+    R4,
+    R5,
+    R6,
+    R7,
+}

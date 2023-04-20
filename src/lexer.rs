@@ -3,7 +3,8 @@ use std::vec::IntoIter;
 use std::{fs, io};
 
 use crate::tokens::{
-    Directive, FileLoc, NumberLiteral, NumberLiteralFormat, Opcode, Token, TokenValue, TrapRoutine,
+    DirectiveTokenValue, FileLoc, NumberLiteralFormat, NumberLiteralTokenValue, OpcodeTokenValue,
+    RegisterTokenValue, Token, TokenValue, TrapRoutineTokenValue,
 };
 
 pub struct Lexer {
@@ -105,7 +106,7 @@ impl Lexer {
                     };
 
                     tokens.push(Token {
-                        value: TokenValue::NumberLiteral(NumberLiteral { format, value }),
+                        value: TokenValue::NumberLiteral(NumberLiteralTokenValue { format, value }),
                         start_loc: self.start_loc,
                         end_loc: self.end_loc,
                     });
@@ -117,12 +118,12 @@ impl Lexer {
                     self.get_next_char_while(&mut directive, |c| !c.is_whitespace());
                     directive = directive.to_ascii_uppercase();
                     let token = match directive.as_str() {
-                        "ORIG" => Directive::ORIG,
-                        "FILL" => Directive::FILL,
-                        "BLKW" => Directive::BLKW,
-                        "STRINGZ" => Directive::STRINGZ,
-                        "END" => Directive::END,
-                        _ => Directive::Error(directive),
+                        "ORIG" => DirectiveTokenValue::ORIG,
+                        "FILL" => DirectiveTokenValue::FILL,
+                        "BLKW" => DirectiveTokenValue::BLKW,
+                        "STRINGZ" => DirectiveTokenValue::STRINGZ,
+                        "END" => DirectiveTokenValue::END,
+                        _ => DirectiveTokenValue::Error(directive),
                     };
 
                     tokens.push(Token {
@@ -143,7 +144,7 @@ impl Lexer {
                         let suffix = &label_upper[2..];
                         if suffix.chars().all(|c| "NZP".contains(c)) {
                             tokens.push(Token {
-                                value: TokenValue::Opcode(Opcode::BR {
+                                value: TokenValue::Opcode(OpcodeTokenValue::BR {
                                     n: suffix.contains('N'),
                                     z: suffix.contains('Z'),
                                     p: suffix.contains('P'),
@@ -159,36 +160,36 @@ impl Lexer {
                     }
 
                     let value = match label_upper.as_str() {
-                        "ADD" => TokenValue::Opcode(Opcode::ADD),
-                        "AND" => TokenValue::Opcode(Opcode::AND),
-                        "JMP" => TokenValue::Opcode(Opcode::JMP),
-                        "JSR" => TokenValue::Opcode(Opcode::JSR),
-                        "LD" => TokenValue::Opcode(Opcode::LD),
-                        "LDI" => TokenValue::Opcode(Opcode::LDI),
-                        "LDR" => TokenValue::Opcode(Opcode::LDR),
-                        "LEA" => TokenValue::Opcode(Opcode::LEA),
-                        "NOT" => TokenValue::Opcode(Opcode::NOT),
-                        "RET" => TokenValue::Opcode(Opcode::RET),
-                        "ST" => TokenValue::Opcode(Opcode::ST),
-                        "STI" => TokenValue::Opcode(Opcode::STI),
-                        "STR" => TokenValue::Opcode(Opcode::STR),
-                        "TRAP" => TokenValue::Opcode(Opcode::TRAP),
+                        "ADD" => TokenValue::Opcode(OpcodeTokenValue::ADD),
+                        "AND" => TokenValue::Opcode(OpcodeTokenValue::AND),
+                        "JMP" => TokenValue::Opcode(OpcodeTokenValue::JMP),
+                        "JSR" => TokenValue::Opcode(OpcodeTokenValue::JSR),
+                        "LD" => TokenValue::Opcode(OpcodeTokenValue::LD),
+                        "LDI" => TokenValue::Opcode(OpcodeTokenValue::LDI),
+                        "LDR" => TokenValue::Opcode(OpcodeTokenValue::LDR),
+                        "LEA" => TokenValue::Opcode(OpcodeTokenValue::LEA),
+                        "NOT" => TokenValue::Opcode(OpcodeTokenValue::NOT),
+                        "RET" => TokenValue::Opcode(OpcodeTokenValue::RET),
+                        "ST" => TokenValue::Opcode(OpcodeTokenValue::ST),
+                        "STI" => TokenValue::Opcode(OpcodeTokenValue::STI),
+                        "STR" => TokenValue::Opcode(OpcodeTokenValue::STR),
+                        "TRAP" => TokenValue::Opcode(OpcodeTokenValue::TRAP),
 
-                        "GETC" => TokenValue::TrapRoutine(TrapRoutine::GETC),
-                        "OUT" => TokenValue::TrapRoutine(TrapRoutine::OUT),
-                        "PUTS" => TokenValue::TrapRoutine(TrapRoutine::PUTS),
-                        "IN" => TokenValue::TrapRoutine(TrapRoutine::IN),
-                        "PUTSP" => TokenValue::TrapRoutine(TrapRoutine::PUTSP),
-                        "HALT" => TokenValue::TrapRoutine(TrapRoutine::HALT),
+                        "GETC" => TokenValue::TrapRoutine(TrapRoutineTokenValue::GETC),
+                        "OUT" => TokenValue::TrapRoutine(TrapRoutineTokenValue::OUT),
+                        "PUTS" => TokenValue::TrapRoutine(TrapRoutineTokenValue::PUTS),
+                        "IN" => TokenValue::TrapRoutine(TrapRoutineTokenValue::IN),
+                        "PUTSP" => TokenValue::TrapRoutine(TrapRoutineTokenValue::PUTSP),
+                        "HALT" => TokenValue::TrapRoutine(TrapRoutineTokenValue::HALT),
 
-                        "R0" => TokenValue::Register(0),
-                        "R1" => TokenValue::Register(1),
-                        "R2" => TokenValue::Register(2),
-                        "R3" => TokenValue::Register(3),
-                        "R4" => TokenValue::Register(4),
-                        "R5" => TokenValue::Register(5),
-                        "R6" => TokenValue::Register(6),
-                        "R7" => TokenValue::Register(7),
+                        "R0" => TokenValue::Register(RegisterTokenValue::R0),
+                        "R1" => TokenValue::Register(RegisterTokenValue::R1),
+                        "R2" => TokenValue::Register(RegisterTokenValue::R2),
+                        "R3" => TokenValue::Register(RegisterTokenValue::R3),
+                        "R4" => TokenValue::Register(RegisterTokenValue::R4),
+                        "R5" => TokenValue::Register(RegisterTokenValue::R5),
+                        "R6" => TokenValue::Register(RegisterTokenValue::R6),
+                        "R7" => TokenValue::Register(RegisterTokenValue::R7),
 
                         _ => TokenValue::Label(label),
                     };
