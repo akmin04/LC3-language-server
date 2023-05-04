@@ -28,19 +28,19 @@ impl Parser {
                     value: NodeValue::NewLine,
                     start_loc: token.start_loc,
                     end_loc: token.end_loc,
-                    errors: None,
+                    errors: Vec::new(),
                 },
                 TokenValue::Label(label) => Node {
                     value: NodeValue::Label(label.clone()),
                     start_loc: token.start_loc,
                     end_loc: token.end_loc,
-                    errors: None,
+                    errors: Vec::new(),
                 },
                 TokenValue::Comment(comment) => Node {
                     value: NodeValue::Comment(comment.clone()),
                     start_loc: token.start_loc,
                     end_loc: token.end_loc,
-                    errors: None,
+                    errors: Vec::new(),
                 },
                 TokenValue::Opcode(opcode) => {
                     let (args, end_loc) = self.get_args().unwrap_or((Vec::new(), token.end_loc));
@@ -59,7 +59,7 @@ impl Parser {
                             }),
                             start_loc: token.start_loc,
                             end_loc,
-                            errors: Some(vec![msg.to_string()]),
+                            errors: vec![msg.to_string()],
                         },
                     }
                 }
@@ -79,7 +79,7 @@ impl Parser {
                             }),
                             start_loc: token.start_loc,
                             end_loc,
-                            errors: Some(vec![msg.to_string()]),
+                            errors: vec![msg.to_string()],
                         },
                     }
                 }
@@ -87,13 +87,13 @@ impl Parser {
                     value: NodeValue::TrapRoutine(*routine),
                     start_loc: token.start_loc,
                     end_loc: token.end_loc,
-                    errors: None,
+                    errors: Vec::new(),
                 },
                 _ => Node {
                     value: NodeValue::UnexpectedToken(token.clone()),
                     start_loc: token.start_loc,
                     end_loc: token.end_loc,
-                    errors: Some(vec!["Unexpected token".to_string()]),
+                    errors: vec!["Unexpected token".to_string()],
                 },
             });
         }
@@ -204,7 +204,7 @@ impl Parser {
                     value: NodeValue::Instruction(InstructionNodeValue::ADD(value)),
                     start_loc: token_start_loc,
                     end_loc: args[2].end_loc,
-                    errors: None,
+                    errors: Vec::new(),
                 })
             }
             OpcodeTokenValue::AND => {
@@ -213,7 +213,7 @@ impl Parser {
                     value: NodeValue::Instruction(InstructionNodeValue::AND(value)),
                     start_loc: token_start_loc,
                     end_loc: args[2].end_loc,
-                    errors: None,
+                    errors: Vec::new(),
                 })
             }
             OpcodeTokenValue::BR { n, z, p } => {
@@ -227,7 +227,7 @@ impl Parser {
                     }),
                     start_loc: token_start_loc,
                     end_loc: args.last().unwrap().end_loc,
-                    errors: None,
+                    errors: Vec::new(),
                 })
             }
             OpcodeTokenValue::JMP => {
@@ -241,7 +241,7 @@ impl Parser {
                             }),
                             start_loc: token_start_loc,
                             end_loc: args.last().unwrap().end_loc,
-                            errors: None,
+                            errors: Vec::new(),
                         }),
                         _ => Err("Incorrect argument type (expected register)"),
                     }
@@ -253,7 +253,7 @@ impl Parser {
                     value: NodeValue::Instruction(InstructionNodeValue::JSR { pc_offset11: value }),
                     start_loc: token_start_loc,
                     end_loc: args.last().unwrap().end_loc,
-                    errors: None,
+                    errors: Vec::new(),
                 })
             }
             OpcodeTokenValue::LD => {
@@ -265,7 +265,7 @@ impl Parser {
                     }),
                     start_loc: token_start_loc,
                     end_loc: args.last().unwrap().end_loc,
-                    errors: None,
+                    errors: Vec::new(),
                 })
             }
             OpcodeTokenValue::LDI => {
@@ -277,7 +277,7 @@ impl Parser {
                     }),
                     start_loc: token_start_loc,
                     end_loc: token_end_loc,
-                    errors: None,
+                    errors: Vec::new(),
                 })
             }
             OpcodeTokenValue::LDR => {
@@ -290,7 +290,7 @@ impl Parser {
                     }),
                     start_loc: token_start_loc,
                     end_loc: args.last().unwrap().end_loc,
-                    errors: None,
+                    errors: Vec::new(),
                 })
             }
             OpcodeTokenValue::LEA => {
@@ -302,7 +302,7 @@ impl Parser {
                     }),
                     start_loc: token_start_loc,
                     end_loc: args.last().unwrap().end_loc,
-                    errors: None,
+                    errors: Vec::new(),
                 })
             }
             OpcodeTokenValue::NOT => {
@@ -319,7 +319,7 @@ impl Parser {
                             }),
                             start_loc: token_start_loc,
                             end_loc: args.last().unwrap().end_loc,
-                            errors: None,
+                            errors: Vec::new(),
                         });
                     }
                 }
@@ -334,7 +334,7 @@ impl Parser {
                         value: NodeValue::Instruction(InstructionNodeValue::RET),
                         start_loc: token_start_loc,
                         end_loc: token_end_loc,
-                        errors: None,
+                        errors: Vec::new(),
                     })
                 }
             }
@@ -347,7 +347,7 @@ impl Parser {
                     }),
                     start_loc: token_start_loc,
                     end_loc: args.last().unwrap().end_loc,
-                    errors: None,
+                    errors: Vec::new(),
                 })
             }
             OpcodeTokenValue::STI => {
@@ -359,7 +359,7 @@ impl Parser {
                     }),
                     start_loc: token_start_loc,
                     end_loc: args.last().unwrap().end_loc,
-                    errors: None,
+                    errors: Vec::new(),
                 })
             }
             OpcodeTokenValue::STR => {
@@ -372,7 +372,7 @@ impl Parser {
                     }),
                     start_loc: token_start_loc,
                     end_loc: args.last().unwrap().end_loc,
-                    errors: None,
+                    errors: Vec::new(),
                 })
             }
             OpcodeTokenValue::TRAP => {
@@ -386,7 +386,7 @@ impl Parser {
                             }),
                             start_loc: token_start_loc,
                             end_loc: args.last().unwrap().end_loc,
-                            errors: None,
+                            errors: Vec::new(),
                         }),
                         _ => Err("Incorrect argument type (expected literal)"),
                     }
@@ -412,7 +412,7 @@ impl Parser {
                             value: NodeValue::Directive(DirectiveNodeValue::ORIG(literal.clone())),
                             start_loc: token_start_loc,
                             end_loc: token_end_loc,
-                            errors: None,
+                            errors: Vec::new(),
                         }),
                         _ => Err("Incorrect argument type (expected literal)".to_string()),
                     }
@@ -427,7 +427,7 @@ impl Parser {
                             value: NodeValue::Directive(DirectiveNodeValue::FILL(literal.clone())),
                             start_loc: token_start_loc,
                             end_loc: token_end_loc,
-                            errors: None,
+                            errors: Vec::new(),
                         }),
                         _ => Err("Incorrect argument type (expected literal)".to_string()),
                     }
@@ -442,7 +442,7 @@ impl Parser {
                             value: NodeValue::Directive(DirectiveNodeValue::BLKW(literal.clone())),
                             start_loc: token_start_loc,
                             end_loc: token_end_loc,
-                            errors: None,
+                            errors: Vec::new(),
                         }),
                         _ => Err("Incorrect argument type (expected literal)".to_string()),
                     }
@@ -459,7 +459,7 @@ impl Parser {
                             )),
                             start_loc: token_start_loc,
                             end_loc: token_end_loc,
-                            errors: None,
+                            errors: Vec::new(),
                         }),
                         _ => Err("Incorrect argument type (expected literal)".to_string()),
                     }
@@ -473,7 +473,7 @@ impl Parser {
                         value: NodeValue::Directive(DirectiveNodeValue::END),
                         start_loc: token_start_loc,
                         end_loc: token_end_loc,
-                        errors: None,
+                        errors: Vec::new(),
                     })
                 }
             }

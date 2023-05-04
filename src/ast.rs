@@ -8,10 +8,10 @@ pub struct Node {
     pub value: NodeValue,
     pub start_loc: FileLoc,
     pub end_loc: FileLoc,
-    pub errors: Option<Vec<String>>,
+    pub errors: Vec<String>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum NodeValue {
     NewLine,
     Comment(String),
@@ -22,13 +22,13 @@ pub enum NodeValue {
     UnexpectedToken(Token),
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum LiteralOrLabel {
     Literal(NumberLiteralTokenValue),
     Label(String),
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum InstructionNodeValue {
     ADD(AddAndOpcodeInstructionNodeValue),
     AND(AddAndOpcodeInstructionNodeValue),
@@ -90,7 +90,7 @@ pub enum InstructionNodeValue {
     },
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum AddAndOpcodeInstructionNodeValue {
     SR2 {
         dr: RegisterTokenValue,
@@ -104,7 +104,7 @@ pub enum AddAndOpcodeInstructionNodeValue {
     },
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum DirectiveNodeValue {
     ORIG(NumberLiteralTokenValue),
     FILL(NumberLiteralTokenValue),
