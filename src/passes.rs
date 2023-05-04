@@ -159,7 +159,7 @@ pub fn verify_number_literals_within_range(ast: &mut [Node]) {
                     offset6,
                 } => match offset6 {
                     LiteralOrLabel::Literal(literal) => {
-                        verify_literal_within_range(node, literal, true, 9)
+                        verify_literal_within_range(node, literal, true, 6)
                     }
                     _ => {}
                 },
