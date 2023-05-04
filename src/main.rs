@@ -1,6 +1,6 @@
 use colored::Colorize;
-use lc3_language_server::lexer::Lexer;
-use lc3_language_server::parser::Parser;
+use lc3_language_server::lexer;
+use lc3_language_server::parser;
 use lc3_language_server::passes;
 use std::{env, fs, process};
 
@@ -16,16 +16,13 @@ fn main() {
     let file_text = fs::read_to_string(&file_name).unwrap();
     let file_lines = file_text.split("\n").collect::<Vec<&str>>();
 
-    let mut lexer = Lexer::from_text(&file_text);
-
-    let tokens = lexer.analyze();
+    let tokens = lexer::analyze(&file_text);
 
     if args.contains(&"--print-tokens".to_owned()) {
         println!("{:#?}", tokens);
     }
 
-    let mut parser = Parser::new(tokens);
-    let mut nodes = parser.parse_ast();
+    let mut nodes = parser::parse_ast(&tokens);
 
     if args.contains(&"--print-ast".to_owned()) {
         println!("{:#?}", nodes);

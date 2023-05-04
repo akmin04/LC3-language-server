@@ -1,3 +1,5 @@
+//! Data types for the nodes in the LC3 abstract syntax tree.
+
 use crate::tokens::{
     DirectiveTokenValue, FileLoc, NumberLiteralTokenValue, OpcodeTokenValue, RegisterTokenValue,
     Token, TrapRoutineTokenValue,
