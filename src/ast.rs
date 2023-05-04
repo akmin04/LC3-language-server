@@ -10,7 +10,13 @@ pub struct Node {
     pub value: NodeValue,
     pub start_loc: FileLoc,
     pub end_loc: FileLoc,
-    pub errors: Vec<String>,
+    pub errors: Vec<NodeError>,
+}
+
+#[derive(Debug, Clone)]
+pub enum NodeError {
+    Error(String),
+    Warning(String),
 }
 
 #[derive(Debug, Clone)]

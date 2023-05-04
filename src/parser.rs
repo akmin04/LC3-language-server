@@ -1,6 +1,6 @@
 use crate::ast::{
     AddAndOpcodeInstructionNodeValue, DirectiveNodeValue, InstructionNodeValue, LiteralOrLabel,
-    Node, NodeValue,
+    Node, NodeError, NodeValue,
 };
 use crate::tokens::{
     DirectiveTokenValue, FileLoc, OpcodeTokenValue, RegisterTokenValue, Token, TokenValue,
@@ -47,7 +47,7 @@ pub fn parse_ast(tokens: &[Token]) -> Vec<Node> {
                         }),
                         start_loc: token.start_loc,
                         end_loc,
-                        errors: vec![msg.to_string()],
+                        errors: vec![NodeError::Error(msg.to_string())],
                     },
                 }
             }
@@ -64,7 +64,7 @@ pub fn parse_ast(tokens: &[Token]) -> Vec<Node> {
                         }),
                         start_loc: token.start_loc,
                         end_loc,
-                        errors: vec![msg.to_string()],
+                        errors: vec![NodeError::Error(msg.to_string())],
                     },
                 }
             }
@@ -78,7 +78,7 @@ pub fn parse_ast(tokens: &[Token]) -> Vec<Node> {
                 value: NodeValue::UnexpectedToken(token.clone()),
                 start_loc: token.start_loc,
                 end_loc: token.end_loc,
-                errors: vec!["Unexpected token".to_string()],
+                errors: vec![NodeError::Error("Unexpected token".to_string())],
             },
         });
     }

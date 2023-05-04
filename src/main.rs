@@ -1,4 +1,5 @@
-use colored::Colorize;
+use colored::{Color, Colorize};
+use lc3_language_server::ast::NodeError;
 use lc3_language_server::lexer;
 use lc3_language_server::parser;
 use lc3_language_server::passes;
@@ -33,7 +34,18 @@ fn main() {
 
     for node in &nodes {
         for error in &node.errors {
-            println!("{}: {}", "error".red().bold(), error.bold());
+            let color = match error {
+                NodeError::Error(_) => Color::Red,
+                NodeError::Warning(_) => Color::Yellow,
+            };
+
+            match error {
+                NodeError::Error(error) => println!("{}: {}", "error".red().bold(), error.bold()),
+                NodeError::Warning(warning) => {
+                    println!("{}: {}", "warning".yellow().bold(), warning.bold())
+                }
+            };
+
             println!(
                 "{}:{}:{}\n",
                 file_name, node.start_loc.line, node.start_loc.col
@@ -42,7 +54,8 @@ fn main() {
             println!(
                 "\t{}{}",
                 " ".repeat(node.start_loc.col - 1),
-                "^".repeat(node.end_loc.col - node.start_loc.col + 1).red()
+                "^".repeat(node.end_loc.col - node.start_loc.col + 1)
+                    .color(color)
             );
             println!("");
         }

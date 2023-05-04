@@ -1,5 +1,6 @@
 use crate::ast::{
-    AddAndOpcodeInstructionNodeValue, InstructionNodeValue, LiteralOrLabel, Node, NodeValue,
+    AddAndOpcodeInstructionNodeValue, InstructionNodeValue, LiteralOrLabel, Node, NodeError,
+    NodeValue,
 };
 use crate::tokens::{NumberLiteralFormat, NumberLiteralTokenValue};
 
@@ -64,7 +65,8 @@ pub fn verify_labels(ast: &mut [Node]) {
             LiteralOrLabel::Literal(_) => {}
             LiteralOrLabel::Label(label) => {
                 if !labels.contains(&label) {
-                    node.errors.push(format!("Undefined label `{}`", label));
+                    node.errors
+                        .push(NodeError::Error(format!("Undefined label `{}`", label)));
                 }
             }
         }
@@ -193,7 +195,7 @@ fn verify_literal_within_range(
     };
 
     if value < min_value || value > max_value {
-        node.errors.push(format!(
+        node.errors.push(NodeError::Warning(format!(
             "Number literal `{}{}` is out of range. Must be within [{}, {}] ({} bits {})",
             match literal.format {
                 NumberLiteralFormat::Hex => "x",
@@ -222,6 +224,6 @@ fn verify_literal_within_range(
             } else {
                 "zero extended"
             }
-        ));
+        )));
     }
 }
