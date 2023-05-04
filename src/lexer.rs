@@ -61,13 +61,14 @@ pub fn analyze(text: &str) -> Vec<Token> {
                 get_next_char_while(&mut raw_data, &mut end_loc, &mut s, |c| c != '"');
                 raw_data.next();
 
+                end_loc.col += 1;
                 tokens.push(Token {
                     value: TokenValue::StringLiteral(s),
                     start_loc,
                     end_loc,
                 });
 
-                end_loc.col += 2;
+                end_loc.col += 1;
             }
             Some(c) if c == ';' => {
                 let mut comment = String::new();

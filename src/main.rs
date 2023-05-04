@@ -8,7 +8,7 @@ fn main() {
     let args = env::args().collect::<Vec<String>>();
 
     if args.len() < 2 {
-        println!("Expected file name");
+        println!("erro: Expected file name");
         process::exit(1);
     }
 
@@ -29,6 +29,7 @@ fn main() {
     }
 
     passes::verify_labels(&mut nodes);
+    passes::verify_number_literals_within_range(&mut nodes);
 
     for node in &nodes {
         for error in &node.errors {
