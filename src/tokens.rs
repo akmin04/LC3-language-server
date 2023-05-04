@@ -7,8 +7,8 @@ pub struct Token {
 
 #[derive(Clone, Copy, Debug)]
 pub struct FileLoc {
-    pub line: u32,
-    pub col: u32,
+    pub line: usize,
+    pub col: usize,
 }
 
 impl FileLoc {

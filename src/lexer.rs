@@ -1,6 +1,5 @@
 use std::iter::Peekable;
 use std::vec::IntoIter;
-use std::{fs, io};
 
 use crate::tokens::{
     DirectiveTokenValue, FileLoc, NumberLiteralFormat, NumberLiteralTokenValue, OpcodeTokenValue,
@@ -15,10 +14,6 @@ pub struct Lexer {
 }
 
 impl Lexer {
-    pub fn from_file(file_path: &str) -> io::Result<Self> {
-        Ok(Self::from_text(&fs::read_to_string(file_path)?))
-    }
-
     pub fn from_text(text: &str) -> Self {
         Lexer {
             raw_data: text.chars().collect::<Vec<_>>().into_iter().peekable(),
@@ -82,7 +77,7 @@ impl Lexer {
                         end_loc: self.end_loc,
                     });
 
-                    self.end_loc.col += 1;
+                    self.end_loc.col += 2;
                 }
                 Some(c) if c == ';' => {
                     let mut comment = String::new();
