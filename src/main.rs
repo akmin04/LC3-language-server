@@ -9,7 +9,7 @@ fn main() {
     let args = env::args().collect::<Vec<String>>();
 
     if args.len() < 2 {
-        println!("erro: Expected file name");
+        println!("error: Expected file name");
         process::exit(1);
     }
 
